@@ -1,0 +1,11 @@
+
+.login-container {
+    text-align: center;
+    border: solid;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.login-control {
+    margin-top: 5px;
+}

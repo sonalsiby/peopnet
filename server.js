@@ -23,8 +23,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Routing
 
 //Base url
+//Send the main 'index.html' file
 app.get('/', function(req, res) {
-    res.send("Hello, world");
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+//Login page
+app.get('/views/login.html', function(req, res) {
+    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+});
+//Take care of all other unhandled URls
+app.get('*', function(req, res) {
+    res.send('This feature is yet to be implemented or 404... [:-(]')
 });
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
