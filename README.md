@@ -8,3 +8,5 @@ I just have a vague idea of what this is going to be. It's just a boring project
 
 Looking forward to better learn development using MEAN and to making this project something interesting.
 Comments, suggestions, questions and commits are always welcome.
+
+More on how to run this app and use it will be updated after preliminary development stage.
