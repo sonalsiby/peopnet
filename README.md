@@ -1,4 +1,4 @@
-# peopnet
+# Peopnet
 This is just a project that I'm doing to get a through understanding of the MEAN stack.
 Right now I plan to make it just a people directory. It should be able to store, retrieve and modify
 details of individuals, inclluding their picture. Other users could login to the app and depending
