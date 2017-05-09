@@ -1,9 +1,12 @@
 <div>
     <div class="col-md-4 col-md-offset-4 login-container">
-        <form>
-            <input class="form-control login-control" type="text" placeholder="Username" ng-model="user">
-            <input class="form-control login-control" type="password" placeholder="Password" ng-model="pass">
-            <button class="btn btn-primary login-control" type="submit">Login</button>
+        <form ng-submit="loginUser()">
+            <input class="form-control login-control" type="text" placeholder="Username" ng-model="username">
+            <input class="form-control login-control" type="password" placeholder="Password" ng-model="password">
+            <div class="pull-right">
+                <button class="btn btn-info login-control">Register</button>
+                <button class="btn btn-primary login-control" type="submit">Login</button>
+            </div>
         </form>
     </div>
 </div>

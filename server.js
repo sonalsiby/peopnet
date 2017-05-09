@@ -8,6 +8,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = {};
 var mongoose = require('mongoose');
 
 //Create app
@@ -28,7 +29,7 @@ var userSchema = mongoose.Schema({
     password: {type: String, required:true},
     userLevel: Number
 });
-var userModel = mongoose.model('Users', userSchema);
+var userDB = mongoose.model('Users', userSchema);
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 //Routing
@@ -36,15 +37,35 @@ var userModel = mongoose.model('Users', userSchema);
 //Base url
 //Send the main 'index.html' file
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'routes', 'redirect.html'));
 });
+app.get('/index.html', function(req, res) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+})
 //Login page
 app.get('/login.html', function(req, res) {
     res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
+//Authenticate users
+app.post('/userAuth', function(req, res) {
+    userDB.findOne(req.body, function(err, usr) { //Search DB
+        if (usr == null) {
+            res.send('NF'); //User not found. Invalid login.
+        } else {
+            res.send('OK'); //Valid login
+            session.user = usr;
+        }
+    });
+});
 //Profile page
 app.get('/my_profile.html', function(req, res) {
+    console.log(session.user);
     res.sendFile(path.join(__dirname, 'views', 'my_profile.html'));
+});
+//Handle logout
+app.get('/logout', function(req, res) {
+    session = {}
+    res.redirect('/');
 });
 //Take care of all other unhandled URls
 app.get('*', function(req, res) {
