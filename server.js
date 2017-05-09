@@ -31,20 +31,31 @@ var userSchema = mongoose.Schema({
 });
 var userDB = mongoose.model('Users', userSchema);
 
+
+var isEmpty = function(obj) {
+  return Object.keys(obj).length === 0;
+}
+
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 //Routing
 
 //Base url
-//Send the main 'index.html' file
+//Send the main 'redirect.html' file
+//It redirects to index.html in public directory
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, 'routes', 'redirect.html'));
 });
+//index.html is handled here
 app.get('/index.html', function(req, res) {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 })
 //Login page
 app.get('/login.html', function(req, res) {
-    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+    if (isEmpty(session)) {
+        res.sendFile(path.join(__dirname, 'views', 'login.html'));
+    } else {
+        res.redirect('/');
+    }
 });
 //Authenticate users
 app.post('/userAuth', function(req, res) {
@@ -59,17 +70,21 @@ app.post('/userAuth', function(req, res) {
 });
 //Profile page
 app.get('/my_profile.html', function(req, res) {
-    console.log(session.user);
-    res.sendFile(path.join(__dirname, 'views', 'my_profile.html'));
+    if (!isEmpty(session)) {
+        res.sendFile(path.join(__dirname, 'views', 'my_profile.html'));
+    } else {
+        res.redirect('/');
+    }
 });
 //Handle logout
 app.get('/logout', function(req, res) {
     session = {}
+    console.log('Logged out');
     res.redirect('/');
 });
 //Take care of all other unhandled URls
 app.get('*', function(req, res) {
-    res.send('This feature is yet to be implemented or 404... [:-(]')
+    res.redirect('/');
 });
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
