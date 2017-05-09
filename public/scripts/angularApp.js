@@ -11,9 +11,10 @@ angularApp.controller('loginController', function($scope, $http) {
     //
 });
 
-//Main Controller
-angularApp.controller('mainController', function($scope, $http) {
-    //
+//User profile Controller
+angularApp.controller('myProfileController', function($scope, $http) {
+    $scope.firstName = "Sonal";
+    $scope.lastName = "Siby";
 });
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -21,8 +22,8 @@ angularApp.controller('mainController', function($scope, $http) {
 //Backend routes are handles by express in server.js
 angularApp.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', {
-        templateUrl: '/views/login.html',
-        controller: 'loginController'
-    })
+        templateUrl: '/my_profile.html',
+        controller: 'myProfileController'
+    });
     $locationProvider.html5Mode(true);
 });
