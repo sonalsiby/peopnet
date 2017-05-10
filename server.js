@@ -40,8 +40,9 @@ var isEmpty = function(obj) {
 //Routing
 
 //Base url
-//Send the main 'redirect.html' file
-//It redirects to index.html in public directory
+//Go to 'redirect.html' file. 
+//It redirects to index.html in public directory. This was done in order
+//to prevent angular looping over and crashing because of 'ng-view' directive in index.html
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, 'routes', 'redirect.html'));
 });

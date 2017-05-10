@@ -1,5 +1,5 @@
 /** 
- *Peopnet AngularJS Script
+ * Peopnet AngularJS Script
 **/
 
 var angularApp = angular.module('Peopnet', ['ngRoute']);
