@@ -27,27 +27,92 @@ angularApp.controller('loginController', function($scope, $http, $window, $locat
         });
     }
     $scope.signupUser = function() {
-        console.log('Pressed');
-        $location.path('/');
+        $location.path('/register');
     }
 });
 
 //User profile page Controller
-angularApp.controller('myProfileController', function($scope, $http, $location, $window) {
+angularApp.controller('myProfileController', function($scope, $http, $location) {
     $scope.firstName = "Sonal";
     $scope.lastName = "Siby";
     //Logout
     $scope.logoutUser = function() {
-        console.log('Came here');
-        $location.path('/logout'); //Route is handled in express
-        $window.location.reload();  //This is required. Don't know why.
+        $http.get('/logout').
+        then(function (response) {
+            console.log(response);
+            $location.path('/');
+        });
     }
-    
+});
+
+//Register page Controller
+angularApp.controller('registerController', function($scope, $http, $location, $window) {
+    $scope.username = '';
+    $scope.password = '';
+    $scope.rptPassword = '';
+    $scope.user_icon = "glyphicon-remove";
+    $scope.pass_icon = "glyphicon-remove";
+    $scope.user_color = "label-danger";
+    $scope.pass_color = "label-danger";
+    $scope.userStatus = 'Minimum of 5 chars';
+    $scope.passStatus = 'Minimum of 8 chars';
+    $scope.userOK = false;
+    $scope.passOK = false;
+
+    $scope.userChange = function() {
+        data = {
+            username: $scope.username
+        }
+        $http.post('/checkUser', data).
+        then(function (response) {
+            $scope.userOK = false;
+            if ($scope.username==undefined || $scope.username.length<5) {
+                $scope.user_color = "label-danger";
+                $scope.userStatus = 'Minimum of 5 chars';
+            } else if (response.data=="T") {
+                $scope.user_color = "label-success";
+                $scope.userStatus = 'This username is available';
+                $scope.userOK = true;
+            } else {
+                $scope.user_color = "label-danger";
+                $scope.userStatus = 'Username not available';
+            }
+        });
+    }
+    $scope.passChange = function() {
+        $scope.passOK = false;
+        if ($scope.password==undefined || $scope.password.length<=8) {
+            $scope.pass_color = "label-danger";
+            $scope.passStatus = 'Minimum of 8 chars';
+        
+        } else if ($scope.password==$scope.rptPassword) {
+            $scope.pass_color = "label-success";
+            $scope.passStatus = 'Password match. Awesome!';
+            $scope.passOK = true;
+        } else {
+            $scope.pass_color = "label-danger";
+            $scope.passStatus = 'The passwords do not match';
+        }
+    }
+    $scope.cancelRegn = function() {
+        $location.path('/');
+    }
+    $scope.registerUser = function() {
+        data = {
+            username: $scope.username,
+            password: $scope.password,
+        }
+        $http.post('/registerUser', data)
+        .then(function(response) {
+            window.alert("Registration successful. Please log in");
+            $location.path('/');
+        });
+    }
 });
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 //Frontend routing happens here in Angular
-//Backend routes are handles by express in server.js
+//Backend routes are handled by express in server.js
 angularApp.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', {
         templateUrl: '/login.html',
@@ -56,6 +121,10 @@ angularApp.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/my_profile', {
         templateUrl: '/my_profile.html',
         controller: 'myProfileController'
+    });
+    $routeProvider.when('/register', {
+        templateUrl: '/register.html',
+        controller: 'registerController'
     });
     $locationProvider.html5Mode(true);
 });

@@ -41,8 +41,7 @@ var isEmpty = function(obj) {
 
 //Base url
 //Go to 'redirect.html' file. 
-//It redirects to index.html in public directory. This was done in order
-//to prevent angular looping over and crashing because of 'ng-view' directive in index.html
+//It redirects to index.html in public directory.
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, 'routes', 'redirect.html'));
 });
@@ -52,11 +51,11 @@ app.get('/index.html', function(req, res) {
 })
 //Login page
 app.get('/login.html', function(req, res) {
-    if (isEmpty(session)) {
-        res.sendFile(path.join(__dirname, 'views', 'login.html'));
-    } else {
-        res.redirect('/');
-    }
+    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+});
+//Register page
+app.get('/register.html', function(req, res) {
+    res.sendFile(path.join(__dirname, 'views', 'register.html'));
 });
 //Authenticate users
 app.post('/userAuth', function(req, res) {
@@ -69,23 +68,44 @@ app.post('/userAuth', function(req, res) {
         }
     });
 });
+//Check if user is present. For registration
+app.post('/checkUser', function(req, res) {
+    userDB.findOne(req.body, function(err, usr) {
+        if (usr == null) {
+            res.send('T'); //Username can be used.
+        } else {
+            res.send('F'); //Username already present
+        }
+    });
+})
+//Check if user is present. For registration
+app.post('/registerUser', function(req, res) {
+    var usr = new userDB(req.body);
+    usr.save(function(err, usr) {
+        if (err) throw err;
+        res.send("T");
+    });
+})
 //Profile page
 app.get('/my_profile.html', function(req, res) {
     if (!isEmpty(session)) {
         res.sendFile(path.join(__dirname, 'views', 'my_profile.html'));
     } else {
-        res.redirect('/');
+        res.sendFile(path.join(__dirname, 'views', 'login.html'));
     }
 });
 //Handle logout
 app.get('/logout', function(req, res) {
     session = {}
-    console.log('Logged out');
-    res.redirect('/');
+    res.send('OK');
+});
+//To handle refreshes from the profile page
+app.get('/my_profile', function(req, res) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 //Take care of all other unhandled URls
 app.get('*', function(req, res) {
-    res.redirect('/');
+    res.sendStatus(404);
 });
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

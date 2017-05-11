@@ -1,0 +1,16 @@
+<div>
+    <div class="col-md-3 col-sm-4 col-sm-offset-4 col-xs-6 col-xs-offset-3 col-md-offset-4 login-container">
+        <h3>New user registration</h3>
+        <form ng-submit="registerUser()">
+            <input class="form-control login-control" ng-change="userChange()" type="text" placeholder="Username" ng-model="username" autofocus required>
+            <span class="label regLabel" ng-class="user_color"><span class="glyphicon regIcon" ng-class="user_icon"></span>{{userStatus}}</span>
+            <input class="form-control login-control" ng-change="passChange()" type="password" placeholder="Password" ng-model="password">
+            <input class="form-control login-control" ng-change="passChange()" type="password" placeholder="Repeat password" ng-model="rptPassword">
+            <span class="label regLabel" ng-class="pass_color"><span class="glyphicon regIcon" ng-class="pass_icon"></span>{{passStatus}}</span>
+            <div class="pull-right">
+                <input class="btn btn-warning login-control" type="button" ng-click="cancelRegn()" value="Cancel">
+                <button class="btn btn-primary login-control" ng-disabled="!(userOK && passOK)" type="submit">Register</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -92,3 +92,13 @@ body {
 .profile-picture {
     height: 100px;
 }
+
+/* Registration form related */
+.regIcon {
+    margin-right: 10px;
+    vertical-align: center;
+}
+.regLabel {
+    display: block;
+    margin-bottom: 10px;
+}
