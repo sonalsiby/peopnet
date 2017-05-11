@@ -8,7 +8,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var session = {};
+var session = require('express-session');
 var mongoose = require('mongoose');
 
 //Create app
@@ -19,6 +19,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({secret:'secureHashKey'}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -63,8 +64,8 @@ app.post('/userAuth', function(req, res) {
         if (usr == null) {
             res.send('NF'); //User not found. Invalid login.
         } else {
+            req.session.user = usr;
             res.send('OK'); //Valid login
-            session.user = usr;
         }
     });
 });
@@ -78,7 +79,7 @@ app.post('/checkUser', function(req, res) {
         }
     });
 })
-//Check if user is present. For registration
+//Create user in DB
 app.post('/registerUser', function(req, res) {
     var usr = new userDB(req.body);
     usr.save(function(err, usr) {
@@ -88,7 +89,7 @@ app.post('/registerUser', function(req, res) {
 })
 //Profile page
 app.get('/my_profile.html', function(req, res) {
-    if (!isEmpty(session)) {
+    if (req.session.user) {
         res.sendFile(path.join(__dirname, 'views', 'my_profile.html'));
     } else {
         res.sendFile(path.join(__dirname, 'views', 'login.html'));
@@ -96,7 +97,11 @@ app.get('/my_profile.html', function(req, res) {
 });
 //Handle logout
 app.get('/logout', function(req, res) {
-    session = {}
+    req.session.destroy(function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
     res.send('OK');
 });
 //To handle refreshes from the profile page

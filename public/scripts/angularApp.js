@@ -39,7 +39,6 @@ angularApp.controller('myProfileController', function($scope, $http, $location) 
     $scope.logoutUser = function() {
         $http.get('/logout').
         then(function (response) {
-            console.log(response);
             $location.path('/');
         });
     }
